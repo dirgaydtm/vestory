@@ -1,0 +1,44 @@
+# lefthook.yml
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      glob: "*.dart"
+      run: dart format {staged_files}
+      stage_fixed: true
+    fix:
+      glob: "*.dart"
+      run: dart fix --apply
+      stage_fixed: true
+    analyze:
+      glob: "*.dart"
+      run: flutter analyze --fatal-infos
+    no-debug-print:
+      glob: "*.dart"
+      run: |
+        if grep -n "print(" {staged_files}; then
+          echo "Found print() — use a logger instead of print()"
+          exit 1
+        fi
+    no-secrets:
+      glob: "{.env,*.env,*_secret*,*apikey*,*.jks,*.keystore}"
+      run: |
+        echo "Sensitive file staged for commit — remove it before committing"
+        exit 1
+
+commit-msg:
+  commands:
+    conventional-commit:
+      run: |
+        commit_msg=$(cat {1})
+        pattern="^(feat|fix|docs|style|refactor|test|chore|perf|build|ci|revert)(\(.+\))?: .{1,100}$"
+        if ! echo "$commit_msg" | grep -qE "$pattern"; then
+          echo "Commit message must follow Conventional Commits: type(scope): description"
+          echo "Example: feat(auth): add login screen"
+          exit 1
+        fi
+
+pre-push:
+  commands:
+    analyze-strict:
+      run: flutter analyze --fatal-infos --fatal-warnings

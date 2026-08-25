@@ -1,17 +1,39 @@
-# hackjam
+# Vestory Flutter Project
 
-A new Flutter project.
+### Prerequisites
 
-## Getting Started
+*   Flutter SDK (^3.14.0-147.0.dev or compatible)
+*   Dart SDK
+*   Lefthook (for Git hooks)
 
-This project is a starting point for a Flutter application.
+### Installation
 
-A few resources to get you started if this is your first Flutter project:
+1.  Clone the repository:
+    ```bash
+    git clone <repository_url>
+    ```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+2.  Install dependencies:
+    ```bash
+    flutter pub get
+    ```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3.  Configure environment variables:
+    Copy `.env.example` to `.env` and fill in the required values.
+    ```bash
+    cp .env.example .env
+    ```
+
+4.  Run code generation (for Drift database and other generated files):
+    ```bash
+    dart run build_runner build --delete-conflicting-outputs
+    ```
+
+5.  Run the application:
+    ```bash
+    flutter run
+    ```
+
+## Development Detail
+
+Please refer to the [`ARCHITECTURE.md`](ARCHITECTURE.md) file for detailed information regarding the project structure and architectural patterns in this repository.

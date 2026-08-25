@@ -1,5 +1,7 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/providers/core_providers.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/mission/presentation/pages/mission_page.dart';
 import '../../features/more/presentation/pages/more_page.dart';
@@ -13,47 +15,54 @@ import '../../features/stock/presentation/pages/stock_buy_page.dart';
 import '../../features/stock/presentation/pages/stock_detail_page.dart';
 import '../../features/stock/presentation/pages/stock_sell_page.dart';
 
-final appRouter = GoRouter(
-  initialLocation: '/',
-  routes: [
-    GoRoute(path: '/', builder: (context, state) => HomePage()),
-    GoRoute(
-      path: '/onboarding1',
-      builder: (context, state) => Onboarding1Page(),
-    ),
-    GoRoute(
-      path: '/onboarding2',
-      builder: (context, state) => Onboarding2Page(),
-    ),
-    GoRoute(path: '/search', builder: (context, state) => SearchPage()),
-    GoRoute(path: '/portfolio', builder: (context, state) => PortfolioPage()),
-    GoRoute(path: '/more', builder: (context, state) => MorePage()),
-    GoRoute(
-      path: '/stock/:id',
-      builder: (context, state) {
-        final id = state.pathParameters['id'];
-        return StockDetailPage(id: id);
-      },
-    ),
-    GoRoute(
-      path: '/stock/:id/buy',
-      builder: (context, state) {
-        final id = state.pathParameters['id'];
-        return StockBuyPage(id: id);
-      },
-    ),
-    GoRoute(
-      path: '/stock/:id/sell',
-      builder: (context, state) {
-        final id = state.pathParameters['id'];
-        return StockSellPage(id: id);
-      },
-    ),
-    GoRoute(path: '/mission', builder: (context, state) => MissionPage()),
-    GoRoute(path: '/settings', builder: (context, state) => SettingsPage()),
-    GoRoute(
-      path: '/notification',
-      builder: (context, state) => NotificationPage(),
-    ),
-  ],
-);
+final routerProvider = Provider<GoRouter>((ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+  final hasSeenOnboarding = prefs.getBool('has_seen_onboarding') ?? false;
+
+  return GoRouter(
+    // initialLocation: hasSeenOnboarding ? '/' : '/onboarding1',
+    initialLocation: '/onboarding1',
+
+    routes: [
+      GoRoute(path: '/', builder: (context, state) => HomePage()),
+      GoRoute(
+        path: '/onboarding1',
+        builder: (context, state) => Onboarding1Page(),
+      ),
+      GoRoute(
+        path: '/onboarding2',
+        builder: (context, state) => Onboarding2Page(),
+      ),
+      GoRoute(path: '/search', builder: (context, state) => SearchPage()),
+      GoRoute(path: '/portfolio', builder: (context, state) => PortfolioPage()),
+      GoRoute(path: '/more', builder: (context, state) => MorePage()),
+      GoRoute(
+        path: '/stock/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id'];
+          return StockDetailPage(id: id);
+        },
+      ),
+      GoRoute(
+        path: '/stock/:id/buy',
+        builder: (context, state) {
+          final id = state.pathParameters['id'];
+          return StockBuyPage(id: id);
+        },
+      ),
+      GoRoute(
+        path: '/stock/:id/sell',
+        builder: (context, state) {
+          final id = state.pathParameters['id'];
+          return StockSellPage(id: id);
+        },
+      ),
+      GoRoute(path: '/mission', builder: (context, state) => MissionPage()),
+      GoRoute(path: '/settings', builder: (context, state) => SettingsPage()),
+      GoRoute(
+        path: '/notification',
+        builder: (context, state) => NotificationPage(),
+      ),
+    ],
+  );
+});

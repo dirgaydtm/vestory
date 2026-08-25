@@ -857,19 +857,6 @@ class $PortfoliosTable extends Portfolios
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $PortfoliosTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _tickerMeta = const VerificationMeta('ticker');
   @override
   late final GeneratedColumn<String> ticker = GeneratedColumn<String>(
@@ -902,12 +889,7 @@ class $PortfoliosTable extends Portfolios
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    ticker,
-    totalLots,
-    averageBuyPrice,
-  ];
+  List<GeneratedColumn> get $columns => [ticker, totalLots, averageBuyPrice];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -920,9 +902,6 @@ class $PortfoliosTable extends Portfolios
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('ticker')) {
       context.handle(
         _tickerMeta,
@@ -954,15 +933,11 @@ class $PortfoliosTable extends Portfolios
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {ticker};
   @override
   Portfolio map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Portfolio(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       ticker: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}ticker'],
@@ -985,12 +960,10 @@ class $PortfoliosTable extends Portfolios
 }
 
 class Portfolio extends DataClass implements Insertable<Portfolio> {
-  final int id;
   final String ticker;
   final int totalLots;
   final double averageBuyPrice;
   const Portfolio({
-    required this.id,
     required this.ticker,
     required this.totalLots,
     required this.averageBuyPrice,
@@ -998,7 +971,6 @@ class Portfolio extends DataClass implements Insertable<Portfolio> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['ticker'] = Variable<String>(ticker);
     map['total_lots'] = Variable<int>(totalLots);
     map['average_buy_price'] = Variable<double>(averageBuyPrice);
@@ -1007,7 +979,6 @@ class Portfolio extends DataClass implements Insertable<Portfolio> {
 
   PortfoliosCompanion toCompanion(bool nullToAbsent) {
     return PortfoliosCompanion(
-      id: Value(id),
       ticker: Value(ticker),
       totalLots: Value(totalLots),
       averageBuyPrice: Value(averageBuyPrice),
@@ -1020,7 +991,6 @@ class Portfolio extends DataClass implements Insertable<Portfolio> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Portfolio(
-      id: serializer.fromJson<int>(json['id']),
       ticker: serializer.fromJson<String>(json['ticker']),
       totalLots: serializer.fromJson<int>(json['totalLots']),
       averageBuyPrice: serializer.fromJson<double>(json['averageBuyPrice']),
@@ -1030,7 +1000,6 @@ class Portfolio extends DataClass implements Insertable<Portfolio> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
       'ticker': serializer.toJson<String>(ticker),
       'totalLots': serializer.toJson<int>(totalLots),
       'averageBuyPrice': serializer.toJson<double>(averageBuyPrice),
@@ -1038,19 +1007,16 @@ class Portfolio extends DataClass implements Insertable<Portfolio> {
   }
 
   Portfolio copyWith({
-    int? id,
     String? ticker,
     int? totalLots,
     double? averageBuyPrice,
   }) => Portfolio(
-    id: id ?? this.id,
     ticker: ticker ?? this.ticker,
     totalLots: totalLots ?? this.totalLots,
     averageBuyPrice: averageBuyPrice ?? this.averageBuyPrice,
   );
   Portfolio copyWithCompanion(PortfoliosCompanion data) {
     return Portfolio(
-      id: data.id.present ? data.id.value : this.id,
       ticker: data.ticker.present ? data.ticker.value : this.ticker,
       totalLots: data.totalLots.present ? data.totalLots.value : this.totalLots,
       averageBuyPrice: data.averageBuyPrice.present
@@ -1062,7 +1028,6 @@ class Portfolio extends DataClass implements Insertable<Portfolio> {
   @override
   String toString() {
     return (StringBuffer('Portfolio(')
-          ..write('id: $id, ')
           ..write('ticker: $ticker, ')
           ..write('totalLots: $totalLots, ')
           ..write('averageBuyPrice: $averageBuyPrice')
@@ -1071,70 +1036,66 @@ class Portfolio extends DataClass implements Insertable<Portfolio> {
   }
 
   @override
-  int get hashCode => Object.hash(id, ticker, totalLots, averageBuyPrice);
+  int get hashCode => Object.hash(ticker, totalLots, averageBuyPrice);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Portfolio &&
-          other.id == this.id &&
           other.ticker == this.ticker &&
           other.totalLots == this.totalLots &&
           other.averageBuyPrice == this.averageBuyPrice);
 }
 
 class PortfoliosCompanion extends UpdateCompanion<Portfolio> {
-  final Value<int> id;
   final Value<String> ticker;
   final Value<int> totalLots;
   final Value<double> averageBuyPrice;
+  final Value<int> rowid;
   const PortfoliosCompanion({
-    this.id = const Value.absent(),
     this.ticker = const Value.absent(),
     this.totalLots = const Value.absent(),
     this.averageBuyPrice = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   PortfoliosCompanion.insert({
-    this.id = const Value.absent(),
     required String ticker,
     required int totalLots,
     required double averageBuyPrice,
+    this.rowid = const Value.absent(),
   }) : ticker = Value(ticker),
        totalLots = Value(totalLots),
        averageBuyPrice = Value(averageBuyPrice);
   static Insertable<Portfolio> custom({
-    Expression<int>? id,
     Expression<String>? ticker,
     Expression<int>? totalLots,
     Expression<double>? averageBuyPrice,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (ticker != null) 'ticker': ticker,
       if (totalLots != null) 'total_lots': totalLots,
       if (averageBuyPrice != null) 'average_buy_price': averageBuyPrice,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   PortfoliosCompanion copyWith({
-    Value<int>? id,
     Value<String>? ticker,
     Value<int>? totalLots,
     Value<double>? averageBuyPrice,
+    Value<int>? rowid,
   }) {
     return PortfoliosCompanion(
-      id: id ?? this.id,
       ticker: ticker ?? this.ticker,
       totalLots: totalLots ?? this.totalLots,
       averageBuyPrice: averageBuyPrice ?? this.averageBuyPrice,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
     if (ticker.present) {
       map['ticker'] = Variable<String>(ticker.value);
     }
@@ -1144,16 +1105,19 @@ class PortfoliosCompanion extends UpdateCompanion<Portfolio> {
     if (averageBuyPrice.present) {
       map['average_buy_price'] = Variable<double>(averageBuyPrice.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('PortfoliosCompanion(')
-          ..write('id: $id, ')
           ..write('ticker: $ticker, ')
           ..write('totalLots: $totalLots, ')
-          ..write('averageBuyPrice: $averageBuyPrice')
+          ..write('averageBuyPrice: $averageBuyPrice, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -1619,6 +1583,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final UserProfileDao userProfileDao = UserProfileDao(
     this as AppDatabase,
   );
+  late final MarketDao marketDao = MarketDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2064,16 +2029,16 @@ typedef $$StocksTableProcessedTableManager =
       PrefetchHooks Function()
     >;
 typedef $$PortfoliosTableCreateCompanionBuilder = PortfoliosCompanion Function({
-  Value<int> id,
   required String ticker,
   required int totalLots,
   required double averageBuyPrice,
+  Value<int> rowid,
 });
 typedef $$PortfoliosTableUpdateCompanionBuilder = PortfoliosCompanion Function({
-  Value<int> id,
   Value<String> ticker,
   Value<int> totalLots,
   Value<double> averageBuyPrice,
+  Value<int> rowid,
 });
 
 class $$PortfoliosTableFilterComposer
@@ -2085,11 +2050,6 @@ class $$PortfoliosTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get ticker => $composableBuilder(
     column: $table.ticker,
     builder: (column) => ColumnFilters(column),
@@ -2115,11 +2075,6 @@ class $$PortfoliosTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get ticker => $composableBuilder(
     column: $table.ticker,
     builder: (column) => ColumnOrderings(column),
@@ -2145,9 +2100,6 @@ class $$PortfoliosTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
   GeneratedColumn<String> get ticker =>
       $composableBuilder(column: $table.ticker, builder: (column) => column);
 
@@ -2191,27 +2143,27 @@ class $$PortfoliosTableTableManager
               $$PortfoliosTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<String> ticker = const Value.absent(),
                 Value<int> totalLots = const Value.absent(),
                 Value<double> averageBuyPrice = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => PortfoliosCompanion(
-                id: id,
                 ticker: ticker,
                 totalLots: totalLots,
                 averageBuyPrice: averageBuyPrice,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 required String ticker,
                 required int totalLots,
                 required double averageBuyPrice,
+                Value<int> rowid = const Value.absent(),
               }) => PortfoliosCompanion.insert(
-                id: id,
                 ticker: ticker,
                 totalLots: totalLots,
                 averageBuyPrice: averageBuyPrice,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

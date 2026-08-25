@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_constants.dart';
 import '../../../../shared/data/repositories/user_repository.dart';
 import '../../../../shared/data/models/user_model.dart';
 
@@ -21,7 +22,11 @@ class OnboardingController extends AutoDisposeAsyncNotifier<void> {
   Future<void> finishOnboarding(String name, String playStyle) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final user = UserModel(name: name, playStyle: playStyle);
+      final user = UserModel(
+        name: name,
+        playStyle: playStyle,
+        balance: AppConstants.initialBalance,
+      );
       await _repository.saveUserProfile(user);
       await _repository.setOnboardingSeen();
     });

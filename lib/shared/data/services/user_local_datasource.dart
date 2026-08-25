@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +15,7 @@ final userLocalDataSourceProvider = Provider<UserLocalDataSource>((ref) {
 abstract class UserLocalDataSource {
   Future<void> saveUser(UserModel user);
   Future<UserModel?> getUser();
+  Stream<UserModel?> watchUser();
 }
 
 class UserLocalDataSourceImpl implements UserLocalDataSource {
@@ -25,7 +27,11 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   Future<void> saveUser(UserModel user) async {
     try {
       await dao.saveUserProfile(
-        UserProfileCompanion.insert(name: user.name, playStyle: user.playStyle),
+        UserProfileCompanion.insert(
+          name: user.name,
+          playStyle: user.playStyle,
+          balance: drift.Value(user.balance),
+        ),
       );
     } catch (e) {
       debugPrint('Drift DB Error: $e');
@@ -41,7 +47,24 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
       id: user.id,
       name: user.name,
       playStyle: user.playStyle,
+      balance: user.balance,
+      currentSimulationDate: user.currentSimulationDate,
       createdAt: user.createdAt,
     );
+  }
+
+  @override
+  Stream<UserModel?> watchUser() {
+    return dao.watchUserProfile().map((user) {
+      if (user == null) return null;
+      return UserModel(
+        id: user.id,
+        name: user.name,
+        playStyle: user.playStyle,
+        balance: user.balance,
+        currentSimulationDate: user.currentSimulationDate,
+        createdAt: user.createdAt,
+      );
+    });
   }
 }

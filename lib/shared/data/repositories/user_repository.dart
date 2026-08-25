@@ -15,6 +15,7 @@ final userRepositoryProvider = Provider<UserRepository>((ref) {
 abstract class UserRepository {
   Future<void> saveUserProfile(UserModel user);
   Future<UserModel?> getUserProfile();
+  Stream<UserModel?> watchUserProfile();
   Future<void> setOnboardingSeen();
 }
 
@@ -32,6 +33,11 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<UserModel?> getUserProfile() async {
     return await localDataSource.getUser();
+  }
+
+  @override
+  Stream<UserModel?> watchUserProfile() {
+    return localDataSource.watchUser();
   }
 
   @override

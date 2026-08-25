@@ -1,74 +1,102 @@
 import '../../../core/database/app_database.dart';
 import '../models/stock_history_model.dart';
 import '../services/market_local_datasource.dart';
+import 'user_repository.dart';
 
 class MarketRepository {
   final MarketLocalDataSource _dataSource;
+  final UserRepository _userRepository;
 
   Map<String, List<StockHistoryModel>> _historyCache = {};
   bool _isInitialized = false;
 
-  MarketRepository(this._dataSource);
+  MarketRepository(this._dataSource, this._userRepository);
 
   Future<void> init() async {
     if (_isInitialized) return;
     _historyCache = await _dataSource.loadJsonHistory();
+
+    final user = await _userRepository.getUserProfile();
+    final currentDate = user?.currentSimulationDate ?? .new(2026, 1, 1);
+
+    final currentStocks = await _dataSource.watchAllStocks().first;
+
+    bool needsReseed = currentStocks.isEmpty;
+    if (!needsReseed && currentDate == DateTime(2026, 1, 1)) {
+      if (currentStocks.every((s) => s.previousPrice == s.currentPrice)) {
+        needsReseed = true;
+      }
+    }
+
+    if (needsReseed) {
+      await _seedInitialStocks(currentDate);
+    }
+
     _isInitialized = true;
+  }
+
+  StocksCompanion _createStockCompanion(
+    String ticker,
+    StockHistoryModel currentPoint,
+    StockHistoryModel prevPoint,
+  ) {
+    return StocksCompanion(
+      ticker: .new(ticker),
+      name: .new(ticker),
+      description: const .new(''),
+      currentPrice: .new(currentPoint.close),
+      previousPrice: .new(prevPoint.close),
+      volume: .new(currentPoint.volume.toInt()),
+    );
+  }
+
+  Future<void> _seedInitialStocks(DateTime currentDate) async {
+    final sampleHistory = _historyCache.values.first;
+    int idx = sampleHistory.indexWhere(
+      (h) =>
+          h.date.isAfter(currentDate) || h.date.isAtSameMomentAs(currentDate),
+    );
+    if (idx == -1) idx = sampleHistory.length - 1;
+
+    final prevIdx = idx > 0 ? idx - 1 : idx;
+
+    final initialStocks = _historyCache.keys.map((ticker) {
+      final history = _historyCache[ticker]!;
+      return _createStockCompanion(ticker, history[idx], history[prevIdx]);
+    }).toList();
+
+    await _dataSource.updateStockPrices(initialStocks);
   }
 
   Future<void> nextDay() async {
     if (!_isInitialized) await init();
 
-    final user = await _dataSource.getUserProfile();
+    final user = await _userRepository.getUserProfile();
     if (user == null) return;
 
-    DateTime currentDate = user.currentSimulationDate ?? .new(2025, 1, 1);
+    DateTime currentDate = user.currentSimulationDate ?? .new(2026, 1, 1);
 
-    final sampleTicker = _historyCache.keys.first;
-    final historyList = _historyCache[sampleTicker]!;
-
-    int currentIndex = historyList.indexWhere(
+    final sampleHistory = _historyCache.values.first;
+    final nextIdx = sampleHistory.indexWhere(
       (h) => h.date.isAfter(currentDate),
     );
 
-    if (currentIndex == -1) {
-      return;
-    }
+    if (nextIdx == -1) return;
 
-    final nextDate = historyList[currentIndex].date;
+    final nextDate = sampleHistory[nextIdx].date;
+    final prevIdx = nextIdx > 0 ? nextIdx - 1 : nextIdx;
 
-    List<StocksCompanion> updatedStocks = [];
-
-    for (String ticker in _historyCache.keys) {
-      final tickerHistory = _historyCache[ticker]!;
-      final dataPoint = tickerHistory.firstWhere(
-        (h) => h.date == nextDate,
-        orElse: () => tickerHistory.last,
-      );
-
-      final prevIndex = tickerHistory.indexWhere((h) => h.date == nextDate) - 1;
-      final prevDataPoint = prevIndex >= 0
-          ? tickerHistory[prevIndex]
-          : dataPoint;
-
-      updatedStocks.add(
-        StocksCompanion(
-          ticker: .new(ticker),
-          name: .new(ticker),
-          description: const .new(''),
-          currentPrice: .new(dataPoint.close),
-          previousPrice: .new(prevDataPoint.close),
-          volume: .new(dataPoint.volume),
-        ),
-      );
-    }
+    final updatedStocks = _historyCache.keys.map((ticker) {
+      final history = _historyCache[ticker]!;
+      return _createStockCompanion(ticker, history[nextIdx], history[prevIdx]);
+    }).toList();
 
     await _dataSource.updateSimulationDate(nextDate);
     await _dataSource.updateStockPrices(updatedStocks);
   }
 
   Future<void> buyStock(String ticker, int lots) async {
-    final user = await _dataSource.getUserProfile();
+    final user = await _userRepository.getUserProfile();
     final stock = await _dataSource.getStock(ticker);
 
     if (user == null || stock == null) throw Exception("Data not found");
@@ -111,7 +139,7 @@ class MarketRepository {
   }
 
   Future<void> sellStock(String ticker, int lots) async {
-    final user = await _dataSource.getUserProfile();
+    final user = await _userRepository.getUserProfile();
     final stock = await _dataSource.getStock(ticker);
     final portfolio = await _dataSource.getPortfolio(ticker);
 
@@ -151,10 +179,10 @@ class MarketRepository {
   ) async {
     if (!_isInitialized) await init();
 
-    final user = await _dataSource.getUserProfile();
+    final user = await _userRepository.getUserProfile();
     if (user == null) return [];
 
-    final currentDate = user.currentSimulationDate ?? DateTime(2025, 1, 1);
+    final currentDate = user.currentSimulationDate ?? DateTime(2026, 1, 1);
     final historyList = _historyCache[ticker] ?? [];
 
     final pastData = historyList

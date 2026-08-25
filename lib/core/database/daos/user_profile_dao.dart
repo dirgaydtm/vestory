@@ -18,4 +18,8 @@ class UserProfileDao extends DatabaseAccessor<AppDatabase>
   Future<UserProfileData?> getUserProfile() {
     return (select(userProfile)..limit(1)).getSingleOrNull();
   }
+
+  Stream<UserProfileData?> watchUserProfile() {
+    return (select(userProfile)..limit(1)).watchSingleOrNull();
+  }
 }

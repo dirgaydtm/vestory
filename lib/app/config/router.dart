@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/providers/core_providers.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../shared/presentation/layouts/main_layout.dart';
 import '../../features/mission/presentation/pages/mission_page.dart';
 import '../../features/more/presentation/pages/more_page.dart';
 import '../../features/notification/presentation/pages/notification_page.dart';
@@ -20,11 +21,36 @@ final routerProvider = Provider<GoRouter>((ref) {
   final hasSeenOnboarding = prefs.getBool('has_seen_onboarding') ?? false;
 
   return GoRouter(
-    // initialLocation: hasSeenOnboarding ? '/' : '/onboarding1',
-    initialLocation: '/onboarding1',
-
+    initialLocation: hasSeenOnboarding ? '/' : '/onboarding1',
     routes: [
-      GoRoute(path: '/', builder: (context, state) => HomePage()),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return MainLayout(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(path: '/', builder: (context, state) => HomePage()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/mission',
+                builder: (context, state) => MissionPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/settings',
+                builder: (context, state) => SettingsPage(),
+              ),
+            ],
+          ),
+        ],
+      ),
       GoRoute(
         path: '/onboarding1',
         builder: (context, state) => Onboarding1Page(),
@@ -39,26 +65,24 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/stock/:id',
         builder: (context, state) {
-          final id = state.pathParameters['id'];
+          final id = state.pathParameters['id']!;
           return StockDetailPage(id: id);
         },
       ),
       GoRoute(
         path: '/stock/:id/buy',
         builder: (context, state) {
-          final id = state.pathParameters['id'];
+          final id = state.pathParameters['id']!;
           return StockBuyPage(id: id);
         },
       ),
       GoRoute(
         path: '/stock/:id/sell',
         builder: (context, state) {
-          final id = state.pathParameters['id'];
+          final id = state.pathParameters['id']!;
           return StockSellPage(id: id);
         },
       ),
-      GoRoute(path: '/mission', builder: (context, state) => MissionPage()),
-      GoRoute(path: '/settings', builder: (context, state) => SettingsPage()),
       GoRoute(
         path: '/notification',
         builder: (context, state) => NotificationPage(),

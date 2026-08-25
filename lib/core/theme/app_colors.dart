@@ -63,6 +63,9 @@ class AppColors {
 
   static const orangeDarker = Color(0xFF4E3A00);
 
+  // Blue Palette Design Tokens
+  static const blueNormal = Color(0xFF6E9BC6);
+
   // Base Design Tokens
   static const baseWhite = Color(0xFFFFFFFF);
   static const baseBlack = Color(0xFF000000);

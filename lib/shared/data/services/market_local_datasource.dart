@@ -28,7 +28,8 @@ class MarketLocalDataSource {
     return result;
   }
 
-  Future<UserProfileData?> getUserProfile() => _dao.getUserProfile();
+  Stream<List<Stock>> watchAllStocks() => _dao.watchAllStocks();
+  Stream<List<Portfolio>> watchAllPortfolios() => _dao.watchAllPortfolios();
 
   Future<void> updateSimulationDate(DateTime newDate) =>
       _dao.updateSimulationDate(newDate);

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../shared/widgets/primary_button.dart';
-import '../../../../shared/widgets/vestory_back_button.dart';
-import '../../../../shared/widgets/vestory_page_indicator.dart';
+import '../../../../shared/presentation/widgets/primary_button.dart';
+import '../../../../shared/presentation/widgets/vestory_back_button.dart';
+import '../../../../shared/presentation/widgets/vestory_page_indicator.dart';
 
 class Onboarding1Page extends StatefulWidget {
   const Onboarding1Page({super.key});
@@ -80,7 +80,7 @@ class _Onboarding1PageState extends State<Onboarding1Page> {
                       )
                     else
                       SizedBox(width: 48),
-                    // Skip button
+
                     TextButton(
                       onPressed: () {
                         context.push('/onboarding2');
@@ -99,13 +99,13 @@ class _Onboarding1PageState extends State<Onboarding1Page> {
                 ),
               ),
               SizedBox(height: 32),
-              // Dots
+
               VestoryPageIndicator(
                 itemCount: _onboardingData.length,
                 currentIndex: _currentIndex,
               ),
               SizedBox(height: 32),
-              // PageView
+
               Expanded(
                 child: PageView.builder(
                   controller: _pageController,
@@ -152,7 +152,7 @@ class _Onboarding1PageState extends State<Onboarding1Page> {
                 ),
               ),
               SizedBox(height: 16),
-              // Button Lanjut
+
               PrimaryButton(text: 'Lanjut', onPressed: _nextPage),
             ],
           ),

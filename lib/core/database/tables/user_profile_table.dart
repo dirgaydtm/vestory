@@ -5,4 +5,6 @@ class UserProfile extends Table {
   TextColumn get name => text()();
   TextColumn get playStyle => text()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  RealColumn get balance => real().withDefault(const Constant(0.0))();
+  DateTimeColumn get currentSimulationDate => dateTime().nullable()();
 }

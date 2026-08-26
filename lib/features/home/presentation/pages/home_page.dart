@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../widgets/balance_section.dart';
@@ -102,7 +103,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                         borderRadius: .circular(32),
                       ),
                       child: TextField(
-                        controller: _searchController,
+                        readOnly: true,
+                        onTap: () => context.push('/search'),
                         decoration: InputDecoration(
                           hintText: 'Cari Saham',
                           hintStyle: TextStyle(

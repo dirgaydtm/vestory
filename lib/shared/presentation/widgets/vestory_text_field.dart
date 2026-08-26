@@ -8,6 +8,10 @@ class VestoryTextField extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType keyboardType;
   final String? errorText;
+  final Widget? suffixIcon;
+  final bool readOnly;
+  final ValueChanged<String>? onChanged;
+  final FocusNode? focusNode;
 
   const VestoryTextField({
     super.key,
@@ -16,6 +20,10 @@ class VestoryTextField extends StatelessWidget {
     required this.controller,
     this.keyboardType = TextInputType.text,
     this.errorText,
+    this.suffixIcon,
+    this.readOnly = false,
+    this.onChanged,
+    this.focusNode,
   });
 
   @override
@@ -35,9 +43,13 @@ class VestoryTextField extends StatelessWidget {
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
+          readOnly: readOnly,
+          onChanged: onChanged,
+          focusNode: focusNode,
           style: TextStyle(fontSize: 14, color: AppColors.textPrimary),
           decoration: InputDecoration(
             hintText: hintText,
+            suffixIcon: suffixIcon,
             hintStyle: TextStyle(
               fontSize: 14,
               color: AppColors.neutralNormal.withValues(alpha: 0.5),

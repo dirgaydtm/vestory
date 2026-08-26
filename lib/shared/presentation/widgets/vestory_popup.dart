@@ -9,6 +9,7 @@ class VestoryPopup extends StatelessWidget {
   final VoidCallback onConfirm;
   final String? rejectText;
   final VoidCallback? onReject;
+  final Color? rejectColor;
 
   const VestoryPopup({
     super.key,
@@ -17,6 +18,7 @@ class VestoryPopup extends StatelessWidget {
     required this.onConfirm,
     this.rejectText,
     this.onReject,
+    this.rejectColor,
   });
 
   @override
@@ -33,32 +35,19 @@ class VestoryPopup extends StatelessWidget {
             SizedBox(height: 24),
             Row(
               children: [
-                if (rejectText != null && onReject != null) ...[
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: onReject,
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.greenNormal,
-                        side: BorderSide(
-                          color: AppColors.greenNormal,
-                          width: 2,
-                        ),
-                        padding: .symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: .circular(24),
-                        ),
-                      ),
-                      child: Text(
-                        rejectText!,
-                        style: TextStyle(fontSize: 16, fontWeight: .bold),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                ],
                 Expanded(
                   child: PrimaryButton(text: confirmText, onPressed: onConfirm),
                 ),
+                if (rejectText != null && onReject != null) ...[
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: PrimaryButton(
+                      text: rejectText!,
+                      onPressed: onReject!,
+                      color: rejectColor ?? AppColors.redNormal,
+                    ),
+                  ),
+                ],
               ],
             ),
           ],

@@ -1573,6 +1573,213 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   }
 }
 
+class $ClaimedMissionsTable extends ClaimedMissions
+    with TableInfo<$ClaimedMissionsTable, ClaimedMission> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ClaimedMissionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _claimedAtMeta = const VerificationMeta(
+    'claimedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> claimedAt = GeneratedColumn<DateTime>(
+    'claimed_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, claimedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'claimed_missions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ClaimedMission> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('claimed_at')) {
+      context.handle(
+        _claimedAtMeta,
+        claimedAt.isAcceptableOrUnknown(data['claimed_at']!, _claimedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_claimedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ClaimedMission map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ClaimedMission(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      claimedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}claimed_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ClaimedMissionsTable createAlias(String alias) {
+    return $ClaimedMissionsTable(attachedDatabase, alias);
+  }
+}
+
+class ClaimedMission extends DataClass implements Insertable<ClaimedMission> {
+  final String id;
+  final DateTime claimedAt;
+  const ClaimedMission({required this.id, required this.claimedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['claimed_at'] = Variable<DateTime>(claimedAt);
+    return map;
+  }
+
+  ClaimedMissionsCompanion toCompanion(bool nullToAbsent) {
+    return ClaimedMissionsCompanion(id: Value(id), claimedAt: Value(claimedAt));
+  }
+
+  factory ClaimedMission.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ClaimedMission(
+      id: serializer.fromJson<String>(json['id']),
+      claimedAt: serializer.fromJson<DateTime>(json['claimedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'claimedAt': serializer.toJson<DateTime>(claimedAt),
+    };
+  }
+
+  ClaimedMission copyWith({String? id, DateTime? claimedAt}) =>
+      ClaimedMission(id: id ?? this.id, claimedAt: claimedAt ?? this.claimedAt);
+  ClaimedMission copyWithCompanion(ClaimedMissionsCompanion data) {
+    return ClaimedMission(
+      id: data.id.present ? data.id.value : this.id,
+      claimedAt: data.claimedAt.present ? data.claimedAt.value : this.claimedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ClaimedMission(')
+          ..write('id: $id, ')
+          ..write('claimedAt: $claimedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, claimedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ClaimedMission &&
+          other.id == this.id &&
+          other.claimedAt == this.claimedAt);
+}
+
+class ClaimedMissionsCompanion extends UpdateCompanion<ClaimedMission> {
+  final Value<String> id;
+  final Value<DateTime> claimedAt;
+  final Value<int> rowid;
+  const ClaimedMissionsCompanion({
+    this.id = const Value.absent(),
+    this.claimedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ClaimedMissionsCompanion.insert({
+    required String id,
+    required DateTime claimedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       claimedAt = Value(claimedAt);
+  static Insertable<ClaimedMission> custom({
+    Expression<String>? id,
+    Expression<DateTime>? claimedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (claimedAt != null) 'claimed_at': claimedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ClaimedMissionsCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? claimedAt,
+    Value<int>? rowid,
+  }) {
+    return ClaimedMissionsCompanion(
+      id: id ?? this.id,
+      claimedAt: claimedAt ?? this.claimedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (claimedAt.present) {
+      map['claimed_at'] = Variable<DateTime>(claimedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ClaimedMissionsCompanion(')
+          ..write('id: $id, ')
+          ..write('claimedAt: $claimedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -1580,10 +1787,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $StocksTable stocks = $StocksTable(this);
   late final $PortfoliosTable portfolios = $PortfoliosTable(this);
   late final $TransactionsTable transactions = $TransactionsTable(this);
+  late final $ClaimedMissionsTable claimedMissions = $ClaimedMissionsTable(
+    this,
+  );
   late final UserProfileDao userProfileDao = UserProfileDao(
     this as AppDatabase,
   );
   late final MarketDao marketDao = MarketDao(this as AppDatabase);
+  late final MissionDao missionDao = MissionDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1593,6 +1804,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     stocks,
     portfolios,
     transactions,
+    claimedMissions,
   ];
 }
 
@@ -2423,6 +2635,155 @@ typedef $$TransactionsTableProcessedTableManager =
       Transaction,
       PrefetchHooks Function()
     >;
+typedef $$ClaimedMissionsTableCreateCompanionBuilder =
+    ClaimedMissionsCompanion Function({
+      required String id,
+      required DateTime claimedAt,
+      Value<int> rowid,
+    });
+typedef $$ClaimedMissionsTableUpdateCompanionBuilder =
+    ClaimedMissionsCompanion Function({
+      Value<String> id,
+      Value<DateTime> claimedAt,
+      Value<int> rowid,
+    });
+
+class $$ClaimedMissionsTableFilterComposer
+    extends Composer<_$AppDatabase, $ClaimedMissionsTable> {
+  $$ClaimedMissionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get claimedAt => $composableBuilder(
+    column: $table.claimedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ClaimedMissionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ClaimedMissionsTable> {
+  $$ClaimedMissionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get claimedAt => $composableBuilder(
+    column: $table.claimedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ClaimedMissionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ClaimedMissionsTable> {
+  $$ClaimedMissionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get claimedAt =>
+      $composableBuilder(column: $table.claimedAt, builder: (column) => column);
+}
+
+class $$ClaimedMissionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ClaimedMissionsTable,
+          ClaimedMission,
+          $$ClaimedMissionsTableFilterComposer,
+          $$ClaimedMissionsTableOrderingComposer,
+          $$ClaimedMissionsTableAnnotationComposer,
+          $$ClaimedMissionsTableCreateCompanionBuilder,
+          $$ClaimedMissionsTableUpdateCompanionBuilder,
+          (
+            ClaimedMission,
+            BaseReferences<
+              _$AppDatabase,
+              $ClaimedMissionsTable,
+              ClaimedMission
+            >,
+          ),
+          ClaimedMission,
+          PrefetchHooks Function()
+        > {
+  $$ClaimedMissionsTableTableManager(
+    _$AppDatabase db,
+    $ClaimedMissionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ClaimedMissionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ClaimedMissionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ClaimedMissionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> claimedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ClaimedMissionsCompanion(
+                id: id,
+                claimedAt: claimedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required DateTime claimedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => ClaimedMissionsCompanion.insert(
+                id: id,
+                claimedAt: claimedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ClaimedMissionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ClaimedMissionsTable,
+      ClaimedMission,
+      $$ClaimedMissionsTableFilterComposer,
+      $$ClaimedMissionsTableOrderingComposer,
+      $$ClaimedMissionsTableAnnotationComposer,
+      $$ClaimedMissionsTableCreateCompanionBuilder,
+      $$ClaimedMissionsTableUpdateCompanionBuilder,
+      (
+        ClaimedMission,
+        BaseReferences<_$AppDatabase, $ClaimedMissionsTable, ClaimedMission>,
+      ),
+      ClaimedMission,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -2435,4 +2796,6 @@ class $AppDatabaseManager {
       $$PortfoliosTableTableManager(_db, _db.portfolios);
   $$TransactionsTableTableManager get transactions =>
       $$TransactionsTableTableManager(_db, _db.transactions);
+  $$ClaimedMissionsTableTableManager get claimedMissions =>
+      $$ClaimedMissionsTableTableManager(_db, _db.claimedMissions);
 }

@@ -92,6 +92,7 @@ flutter:
     - assets/images/stocks/
     - assets/images/mission/
     - assets/images/search/
+    - assets/images/notification/
     - assets/data/
   #   - images/a_dot_ham.jpeg
 

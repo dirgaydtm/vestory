@@ -7,6 +7,7 @@ import '../widgets/balance_section.dart';
 import '../widgets/stock_market_section.dart';
 import '../widgets/trending_section.dart';
 import '../../../../shared/presentation/widgets/vestory_popup.dart';
+import '../../../notification/presentation/providers/notification_provider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -87,20 +88,23 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Keep notification observer alive while on Home
+    ref.watch(missionNotificationObserverProvider);
+
     return Scaffold(
       backgroundColor: AppColors.greenNormal,
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: .only(left: 24, right: 24, top: 16),
+              padding: EdgeInsets.only(left: 24, right: 24, top: 16),
               child: Row(
                 children: [
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
                         color: AppColors.baseWhite,
-                        borderRadius: .circular(32),
+                        borderRadius: BorderRadius.circular(32),
                       ),
                       child: TextField(
                         readOnly: true,
@@ -111,13 +115,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                             color: AppColors.neutralDark,
                             fontSize: 16,
                           ),
-                          border: .none,
-                          contentPadding: .symmetric(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
                             horizontal: 20,
                             vertical: 14,
                           ),
                           suffixIcon: Padding(
-                            padding: .only(right: 8),
+                            padding: EdgeInsets.only(right: 8),
                             child: Icon(
                               Icons.search,
                               color: AppColors.baseBlack,
@@ -128,17 +132,20 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
                   ),
                   SizedBox(width: 16),
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: AppColors.baseWhite,
-                      shape: .circle,
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.notifications_none,
-                        color: AppColors.greenNormal,
+                  GestureDetector(
+                    onTap: () => context.push('/notification'),
+                    child: Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: AppColors.baseWhite,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.notifications_none,
+                          color: AppColors.greenNormal,
+                        ),
                       ),
                     ),
                   ),

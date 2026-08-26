@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/app_constants.dart';
 import '../../../../shared/presentation/providers/market_provider.dart';
 import '../../../../shared/presentation/widgets/primary_button.dart';
 
@@ -66,8 +67,8 @@ class _StockSellPageState extends ConsumerState<StockSellPage> {
           }
 
           final investment = _price * 100 * _lots;
-          final brokerFee = investment * 0.00342;
-          final exchangeFee = investment * 0.00117;
+          final brokerFee = investment * AppConstants.brokerFeeRate;
+          final exchangeFee = investment * AppConstants.exchangeFeeRate;
           final total = investment - brokerFee - exchangeFee;
 
           return SafeArea(

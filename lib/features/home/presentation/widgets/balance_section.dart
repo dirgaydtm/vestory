@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/currency_format.dart';
@@ -64,18 +65,21 @@ class _BalanceSectionState extends ConsumerState<BalanceSection> {
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  Container(
-                    padding: .symmetric(horizontal: 16, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: AppColors.greenLight,
-                      borderRadius: .circular(16),
-                    ),
-                    child: Text(
-                      'More',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: .bold,
-                        color: AppColors.textPrimary,
+                  GestureDetector(
+                    onTap: () => context.push('/portfolio'),
+                    child: Container(
+                      padding: .symmetric(horizontal: 16, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: AppColors.greenLight,
+                        borderRadius: .circular(16),
+                      ),
+                      child: Text(
+                        'More',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: .bold,
+                          color: AppColors.textPrimary,
+                        ),
                       ),
                     ),
                   ),

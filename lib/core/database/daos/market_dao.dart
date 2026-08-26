@@ -57,4 +57,11 @@ class MarketDao extends DatabaseAccessor<AppDatabase> with _$MarketDaoMixin {
   Stream<List<Stock>> watchAllStocks() => select(stocks).watch();
 
   Stream<List<Portfolio>> watchAllPortfolios() => select(portfolios).watch();
+
+  Stream<List<Transaction>> watchAllTransactions() =>
+      (select(transactions)..orderBy([
+            (t) =>
+                OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
+          ]))
+          .watch();
 }

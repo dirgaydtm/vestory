@@ -29,6 +29,10 @@ final marketPortfoliosProvider = StreamProvider((ref) async* {
   yield* ref.watch(marketLocalDataSourceProvider).watchAllPortfolios();
 });
 
+final marketTransactionsProvider = StreamProvider((ref) async* {
+  yield* ref.watch(marketLocalDataSourceProvider).watchAllTransactions();
+});
+
 final stockChartProvider =
     FutureProvider.family<List<StockHistoryModel>, String>((ref, ticker) async {
       final repo = ref.watch(marketRepositoryProvider);

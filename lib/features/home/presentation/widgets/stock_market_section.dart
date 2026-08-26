@@ -52,7 +52,7 @@ class StockMarketSection extends ConsumerWidget {
         ),
         SizedBox(height: 16),
         SizedBox(
-          height: 110,
+          height: 120,
           child: stocksAsync.when(
             data: (stocks) {
               final randomStocks = stocks.toList()..shuffle();

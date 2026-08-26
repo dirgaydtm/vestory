@@ -4,7 +4,10 @@ import 'package:drift/drift.dart' as drift;
 import 'package:vestory/core/database/app_database.dart';
 import 'package:vestory/shared/data/models/stock_history_model.dart';
 import 'package:vestory/shared/data/services/market_local_datasource.dart';
+import 'package:vestory/shared/data/services/user_local_datasource.dart';
 import 'package:vestory/shared/data/repositories/market_repository.dart';
+import 'package:vestory/shared/data/repositories/user_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Mock Data Source that overrides JSON loading to use dummy data
 class TestMarketDataSource extends MarketLocalDataSource {
@@ -38,12 +41,22 @@ class TestMarketDataSource extends MarketLocalDataSource {
 void main() {
   late AppDatabase db;
   late TestMarketDataSource dataSource;
+  late UserRepository userRepository;
   late MarketRepository repository;
 
   setUp(() async {
     db = AppDatabase.forTesting(NativeDatabase.memory());
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+
     dataSource = TestMarketDataSource(db.marketDao);
-    repository = MarketRepository(dataSource);
+    final userDataSource = UserLocalDataSourceImpl(dao: db.userProfileDao);
+    userRepository = UserRepositoryImpl(
+      localDataSource: userDataSource,
+      prefs: prefs,
+    );
+
+    repository = MarketRepository(dataSource, userRepository);
 
     // Seed initial user profile
     await db
@@ -68,14 +81,14 @@ void main() {
       await repository.init();
 
       // Initial check
-      var user = await dataSource.getUserProfile();
+      var user = await userRepository.getUserProfile();
       expect(user?.currentSimulationDate, DateTime(2025, 1, 1));
 
       // Execute Next Day
       await repository.nextDay();
 
       // Verify Date advanced
-      user = await dataSource.getUserProfile();
+      user = await userRepository.getUserProfile();
       expect(user?.currentSimulationDate, DateTime(2025, 1, 2));
 
       // Verify Stock updated in DB
@@ -93,7 +106,7 @@ void main() {
     // 10 * 100 * 1150 = 1,150,000
     await repository.buyStock('ANTM.JK', 10);
 
-    final user = await dataSource.getUserProfile();
+    final user = await userRepository.getUserProfile();
     expect(user?.balance, 10000000.0 - 1150000.0);
 
     final portfolio = await dataSource.getPortfolio('ANTM.JK');
@@ -112,7 +125,7 @@ void main() {
     // Revenue: 5 * 100 * 1150 = 575,000
     await repository.sellStock('ANTM.JK', 5);
 
-    final user = await dataSource.getUserProfile();
+    final user = await userRepository.getUserProfile();
     // 10000000 - 1150000 + 575000
     expect(user?.balance, 10000000.0 - 1150000.0 + 575000.0);
 

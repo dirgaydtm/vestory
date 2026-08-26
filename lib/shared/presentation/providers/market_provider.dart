@@ -32,5 +32,11 @@ final marketPortfoliosProvider = StreamProvider((ref) async* {
 final stockChartProvider =
     FutureProvider.family<List<StockHistoryModel>, String>((ref, ticker) async {
       final repo = ref.watch(marketRepositoryProvider);
-      return repo.getChartData(ticker, 7); // Last 7 days for sparkline
+      return repo.getChartData(ticker, 7);
+    });
+
+final stockDetailChartProvider =
+    FutureProvider.family<List<StockHistoryModel>, String>((ref, ticker) async {
+      final repo = ref.watch(marketRepositoryProvider);
+      return repo.getChartData(ticker, 1000);
     });

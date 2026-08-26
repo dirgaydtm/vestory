@@ -66,6 +66,7 @@ class MarketRepository {
     }).toList();
 
     await _dataSource.updateStockPrices(initialStocks);
+    await _dataSource.updateSimulationDate(sampleHistory[idx].date);
   }
 
   Future<void> nextDay() async {

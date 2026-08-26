@@ -170,7 +170,7 @@ final portfolioChartProvider = Provider.family<PortfolioChartState, String>((
 
   final timeZero = sorted.isNotEmpty
       ? sorted.first.createdAt
-      : now.subtract(const Duration(days: 30));
+      : now.subtract(Duration(days: 30));
   final totalLifeTime = now.difference(timeZero).inMilliseconds;
 
   double getEquityAt(DateTime date) {

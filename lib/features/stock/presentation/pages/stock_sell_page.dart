@@ -132,7 +132,7 @@ class _StockSellPageState extends ConsumerState<StockSellPage> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                  padding: .symmetric(vertical: 24, horizontal: 16),
                   decoration: BoxDecoration(
                     color: AppColors.baseBackground,
                     boxShadow: [

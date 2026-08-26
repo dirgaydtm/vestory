@@ -43,7 +43,7 @@ class MarketRepository {
     return StocksCompanion(
       ticker: .new(ticker),
       name: .new(ticker),
-      description: const .new(''),
+      description: .new(''),
       currentPrice: .new(currentPoint.close),
       previousPrice: .new(prevPoint.close),
       volume: .new(currentPoint.volume.toInt()),

@@ -15,14 +15,14 @@ class PortfolioProfitLoss extends StatelessWidget {
 
   Widget _buildCard(String label, String value, bool isProfit) {
     return Container(
-      width: double.infinity,
+      width: .infinity,
       padding: .symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
         color: isProfit
             ? AppColors.greenNormal.withValues(alpha: 0.1)
             : AppColors.redNormal.withValues(alpha: 0.1),
         borderRadius: .circular(24),
-        border: Border.all(
+        border: .all(
           color: isProfit ? AppColors.greenNormal : AppColors.redNormal,
         ),
       ),

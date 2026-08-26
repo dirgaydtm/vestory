@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/providers/core_providers.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../shared/presentation/layouts/main_layout.dart';
+import '../../features/mission/presentation/pages/mission_detail_page.dart';
 import '../../features/mission/presentation/pages/mission_page.dart';
 import '../../features/more/presentation/pages/more_page.dart';
 import '../../features/notification/presentation/pages/notification_page.dart';
@@ -86,6 +87,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/notification',
         builder: (context, state) => NotificationPage(),
+      ),
+      GoRoute(
+        path: '/mission/detail/:id',
+        builder: (context, state) =>
+            MissionDetailPage(id: state.pathParameters['id']!),
       ),
     ],
   );

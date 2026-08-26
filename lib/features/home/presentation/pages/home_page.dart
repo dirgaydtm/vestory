@@ -156,7 +156,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         child: Column(
                           children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 24),
+                              padding: .symmetric(horizontal: 24),
                               child: BalanceSection(),
                             ),
                             SizedBox(height: 24),
@@ -166,11 +166,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 decoration: BoxDecoration(
                                   color: AppColors.baseWhite,
                                   borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(32),
-                                    topRight: Radius.circular(32),
+                                    topLeft: .circular(32),
+                                    topRight: .circular(32),
                                   ),
                                 ),
-                                padding: EdgeInsets.only(top: 24, bottom: 40),
+                                padding: .only(top: 24, bottom: 40),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

@@ -90,6 +90,7 @@ flutter:
   assets:
     - assets/images/onboarding/
     - assets/images/stocks/
+    - assets/images/mission/
     - assets/data/
   #   - images/a_dot_ham.jpeg
 

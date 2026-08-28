@@ -1,14 +1,14 @@
 <div align="center">
 
-  <img src="assets/images/core/launcher.png" alt="Vestory logo" width="180" style="border-radius: 10%;"/>
-
-  <p align="center">
-    <img src="docs/images/app-mockup.png" alt="Vestory mockup" width="100%" />
-  </p>
-
-  # Vestory
+  <img src="assets/images/core/splash.png" alt="Vestory logo" width="180" style="border-radius: 10%;"/>
 
   **Vestory is a gamified stock investment application designed to help users learn and practice investing through engaging missions and simulated market data.**
+
+   <p align="center">
+    <img width="33%" alt="Image" src="https://github.com/user-attachments/assets/cc083098-7ce1-48ea-bd9a-2eda523fc2ad" />
+    <img width="33%" alt="Image" src="https://github.com/user-attachments/assets/6f319c67-da96-43b7-a104-fab508cb7373" />
+    <img width="33%" alt="Image" src="https://github.com/user-attachments/assets/508db136-76ca-4d37-a705-1468e3139aa6" />
+  </p>
 
   <br />
 
@@ -21,7 +21,7 @@
 
 ## Table of contents
 
-- [Vestory](#vestory)
+- Vestory
   - [Table of contents](#table-of-contents)
   - [Project overview](#project-overview)
   - [Key features](#key-features)

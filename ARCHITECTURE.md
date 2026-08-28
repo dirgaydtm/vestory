@@ -8,82 +8,67 @@ This project follows a Feature-Driven Architecture pattern. The codebase is divi
 
 ## Tech
 
-| Category             | Technology / Package                                                                         | Description                                  |
-| :------------------- | :------------------------------------------------------------------------------------------- | :------------------------------------------- |
-| **Framework**        | Flutter                                                                                      | Primary UI framework                         |
-| **State Management** | Riverpod (`flutter_riverpod`)                                                                | State management and dependency injection    |
-| **Routing**          | GoRouter (`go_router`)                                                                       | Declarative routing                          |
-| **Networking**       | Dio (`dio`)                                                                                  | Standard HTTP requests                       |
-| **Local Storage**    | SQLite & Drift (`drift`, `sqlite3_flutter_libs`)                                             | Offline-first relational local database      |
-| **Environment**      | Dotenv (`flutter_dotenv`)                                                                    | Environment variables configuration          |
-| **UI Components**    | SVG (`flutter_svg`), Shimmer (`shimmer`), Animations (`flutter_animate`), Chart (`fl_chart`) | Various UI components and data visualization |
-| **Code Quality**     | Lefthook                                                                                     | Git hooks (pre-commit, commit-msg, pre-push) |
+| Category             | Technology / Package                             | Description                                  |
+| :------------------- | :----------------------------------------------- | :------------------------------------------- |
+| **Framework**        | Flutter                                          | Primary UI framework                         |
+| **State Management** | Riverpod (`flutter_riverpod`)                    | State management and dependency injection    |
+| **Routing**          | GoRouter (`go_router`)                           | Declarative routing                          |
+| **Local Storage**    | SQLite & Drift (`drift`, `sqlite3_flutter_libs`) | Offline-first relational local database      |
+| **UI Components**    | Chart (`fl_chart`)                               | Data visualization                           |
+| **Code Quality**     | Lefthook                                         | Git hooks (pre-commit, commit-msg, pre-push) |
 
 
 ## Structure
 
-```bash
+```text
 lib/
 ├── main.dart                          # Application entry point: await bootstrap(); runApp(App());
-├── bootstrap.dart                     # Initialization: dotenv, database, error handlers
+├── bootstrap.dart                     # Initialization: Drift database, Env setup, SharedPreferences
 │
-├── app/
+├── app/                               # Core Application Setup
 │   ├── app.dart                       # Root widget: MaterialApp.router()
 │   └── config/
-│       └── router.dart                # GoRouter configuration
+│       └── router.dart                # GoRouter configuration & route definitions
 │
-├── core/                              # Shared application core logic and utilities
-│   ├── theme/                         # Styling, colors, and typography
-│   │   ├── app_colors.dart
-│   │   ├── app_text_styles.dart
-│   │   └── app_theme.dart
-│   ├── network/                       # API clients and interceptors
-│   │   └── dio_client.dart
+├── core/                              # Shared Application Core Logic
+│   ├── constants/                     # Global constants (e.g., app_constants.dart)
 │   ├── database/                      # Offline-first SQLite database (Drift)
-│   │   ├── app_database.dart
-│   │   └── daos/
-│   ├── constants/                     # Global constants and keys
-│   │   ├── app_constants.dart
-│   │   └── db_constants.dart
+│   │   ├── connection/                # Platform-specific database connections
+│   │   ├── daos/                      # Data Access Objects (Queries)
+│   │   ├── tables/                    # Table Schema Definitions
 │   ├── providers/                     # Global Riverpod providers
-│   │   └── core_providers.dart
-│   ├── errors/                        # Error handling and failure models
-│   │   └── failures.dart
-│   └── utils/                         # Extension methods and helper functions
-│       └── extensions.dart
+│   ├── theme/                         # Styling, colors, and typography
+│   └── utils/                         # Helper functions and formatters
 │
-├── features/                          # Feature modules
-│   ├── auth/                          # Example feature: Authentication
-│   │   ├── data/
-│   │   │   ├── models/                # Data Transfer Objects (DTOs)
-│   │   │   ├── services/              # Remote/Local data sources
-│   │   │   └── repositories/          # Repository implementations
-│   │   └── presentation/
-│   │       ├── providers/             # Feature-specific state management
-│   │       ├── pages/                 # UI Screens
-│   │       └── widgets/               # Feature-specific UI components
-│   ├── onboarding/
-│   ├── home/
-│   └── feature-x/                     # Template for new features
-│       ├── data/
-│       │   ├── models/
-│       │   │   └── feature_x_model.dart
-│       │   ├── services/
-│       │   │   └── feature_x_remote_datasource.dart
-│       │   └── repositories/
-│       │       └── feature_x_repository.dart
-│       └── presentation/
-│           ├── providers/
-│           │   └── feature_x_provider.dart
-│           ├── pages/
-│           │   └── feature_x_page.dart
-│           └── widgets/
+├── features/                          # Feature Modules (Feature-First)
+│   ├── home/                          # Home Dashboard
+│   ├── mission/                       # Gamified Missions System
+│   ├── notification/                  # App Notifications and History
+│   ├── onboarding/                    # Welcome & Introduction Screens
+│   ├── portfolio/                     # Investment Portfolio Tracking
+│   ├── search/                        # Market Search & Debouncing
+│   ├── settings/                      # Preferences and Toggles
+│   └── stock/                         # Stock Market Data & Chart Views
 │
-└── shared/                            # Reusable components across multiple features
-    ├── models/                        # Shared data models
-    └── widgets/                       # Shared UI components
-
-assets/                                # Static resources
+├── shared/                            # Reusable Things Across Features
+│   ├── data/                          # Shared Repositories & Models
+│   │   ├── constants/
+│   │   ├── models/
+│   │   ├── repositories/
+│   │   └── services/
+│   └── presentation/                  # Shared UI Elements
+│       ├── layouts/
+│       ├── providers/
+│       └── widgets/
+│
+assets/                                # Static Resources
 ├── images/
-└── fonts/
+│   ├── core/
+│   ├── mission/
+│   ├── notification/
+│   ├── onboarding/
+│   ├── search/
+│   └── stocks/
+├── fonts/                             # Custom fonts
+└── data/                              # Static JSON data for simulation
 ```

@@ -35,12 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.6.1
-  dio: ^5.11.0
   go_router: ^17.5.0
-  flutter_svg: ^2.3.0
-  flutter_dotenv: ^6.0.1
-  shimmer: ^4.0.0
-  flutter_animate: ^4.5.2
   fl_chart: ^1.2.0
   drift: ^2.34.3
   sqlite3_flutter_libs: ^0.6.0+eol
